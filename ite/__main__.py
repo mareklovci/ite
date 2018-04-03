@@ -2,49 +2,31 @@
 # -*- coding: utf-8 -*-
 """ITE 2018"""
 
-from urllib import request as req
-from bs4 import BeautifulSoup
-import re
-
+import json
+from ite import read_website
+from ite import process_html
 
 __all__ = ('main',)  # list of public objects of module
 
 
-def read_website(url: str) -> str:
-    try:
-        fr = req.urlopen(url)
-        text = fr.read()
-        fr.close()
-    except req.HTTPError as err:
-        if err.code == 404:
-            print('Server unavailable')
-            text = ''
-        else:
-            raise
-    return text
-
-
-def get_urls(soup) -> str:
-    url_pattern = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
-    for link in soup.find_all('a'):
-        href = link.get('href')
-        if href is None:
-            continue
-        if re.match(url_pattern, href):
-            yield href
+def save(title: str, content: str, url: str):
+    json_file = {'title': title, 'content': content, 'url': url}
+    path = '../storage/' + title + '.json'
+    with open(path, 'w') as fp:
+        json.dump(json_file, fp)
 
 
 def main():
-    website1 = 'https://en.wikipedia.org/wiki/Drosera_regia'
-    # website2 = 'http://vykuphubhalze.eu/'
-    # website3 = 'http://legacy.carnivorousplants.org/cpn/articles/CPNv34n3p85_91.pdf'
-    web = read_website(website1)
-    soup = BeautifulSoup(web, 'html.parser')
-    # print(soup.body.prettify())
-    urls = get_urls(soup)
-    urls = filter(lambda x: not re.match(r'^(.*?)\.pdf', x), urls)  # filter pdf files
-    for url in urls:
-        print(url)
+    url = 'https://en.wikipedia.org/wiki/Drosera_regia'
+    # url = 'http://vykuphubhalze.eu/'
+    # url = 'http://legacy.carnivorousplants.org/cpn/articles/CPNv34n3p85_91.pdf'
+    levels = {0: [url]}
+    for i in range(2):
+        for url in levels[i]:
+            html = read_website(url)
+            urls, title, text = process_html(html)
+            save(title, text, url)
+            levels[i + 1] = urls
 
 
 if __name__ == '__main__':
