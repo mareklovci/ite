@@ -5,15 +5,20 @@
 import json
 from ite import read_website
 from ite import process_html
+import os
 
 __all__ = ('main',)  # list of public objects of module
 
 
 def save(title: str, content: str, url: str):
-    json_file = {'title': title, 'content': content, 'url': url}
-    path = '../storage/' + title + '.json'
-    with open(path, 'w') as fp:
+    json_file = {'title': title, 'url': url, 'content': content}
+    path = '../storage/'
+    if not os.path.exists(path):
+        path = './storage/'
+    path = os.path.join(path + title + '.json')
+    with open(path, 'w+') as fp:
         json.dump(json_file, fp)
+        fp.flush()
 
 
 def main():
