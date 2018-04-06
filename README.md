@@ -6,7 +6,7 @@ Semestrální práce k předmětu KKY/ITE, vytvářená v trojčlenných týmech
 
 ## Jak spustit
 
-V případě spouštění přes příkazovou řádku lze použít `$ python -m yourpackage`. V případě použití IDE jako PyCharm, atp. se spouští soubor `__main__.py`. 
+V případě spouštění přes příkazovou řádku lze použít `$ python -m ite`. V případě použití IDE jako PyCharm, atp. se spouští soubor `__main__.py`. 
 
 
 ## Deadline!!!
