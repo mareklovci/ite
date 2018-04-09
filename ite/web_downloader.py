@@ -15,7 +15,9 @@ def read_website(url: str) -> str:
             print('Server unavailable')
             text = ''
         else:
-            raise
+            # Marek Lovčí - nevadí místo raise?
+            print('Error: ', err.code)
+            text = ''
     return text
 
 

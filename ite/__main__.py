@@ -25,9 +25,14 @@ def main():
     url = 'https://en.wikipedia.org/wiki/Drosera_regia'
     # url = 'http://vykuphubhalze.eu/'
     # url = 'http://legacy.carnivorousplants.org/cpn/articles/CPNv34n3p85_91.pdf'
+    # url = 'https://www.seznam.cz/'
+    # url = 'https://portal.zcu.cz/portal/'
+    # url = 'https://www.tensorflow.org/'
+
     levels = {0: [url]}
     for i in range(2):
         for url in levels[i]:
+            print('read...') # výpis do konzole, že se něco děje - smažte, jestli se vám to nelíbí :D
             html = read_website(url)
             urls, title, text = process_html(html)
             save(title, text, url)

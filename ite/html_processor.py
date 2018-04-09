@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """HTML reading and processing"""
 
+import random
 import re
 from unidecode import unidecode
 from bs4 import BeautifulSoup
@@ -18,6 +19,10 @@ def get_urls(soup) -> str:
 
 
 def scrap_text(soup):
+    # hotfix - vrácení prázdného stringu v případě soup.body = None
+    if not soup.body:
+        return ''
+
     for p in soup.body.find_all('p'):
         for string in p.next_elements:
             string = str(string)
@@ -36,8 +41,27 @@ def group_text(scrap):
     string = re.sub(r'\s+', ' ', string)
     return string
 
+def discard_interpunction(text, chars_to_discard = ['.', ',', '|', '?', '/', '\\', '<', '>', ' ']):
+    """
+    Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
+    """
+    for char in chars_to_discard:
+        text = text.replace(char, '')
+    return text
+
+def failed_title():
+    """
+    Hotfix  - v případě, že soup nemá title
+            - TODO: investigace stránek s url dle souborů empty-string-XXXXXX, proč zde není title?
+            - random nemá hlubší výzanm, jen aby se to ukládalo pod jiným názvem :D
+    """
+    return 'failed-title-' + str(random.randint(0, 100000))
 
 def make_title(soup) -> str:
+    # hotfix - v případě nenalezení head nebo head.text
+    if not soup.head or not soup.head.text:
+        return failed_title()
+
     title: str = soup.head.title.text
     splt = title.lower().split()
     for item in splt:
@@ -45,6 +69,7 @@ def make_title(soup) -> str:
             splt.remove(item)
     title = '-'.join(splt)
     unaccented_title = unidecode(title)
+    unaccented_title = discard_interpunction(unaccented_title)
     return unaccented_title
 
 
