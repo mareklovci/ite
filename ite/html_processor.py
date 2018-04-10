@@ -3,6 +3,7 @@
 """HTML reading and processing"""
 
 import random
+import string as s
 import re
 from unidecode import unidecode
 from bs4 import BeautifulSoup
@@ -23,6 +24,8 @@ def scrap_text(soup):
     if not soup.body:
         return ''
 
+    translator = str.maketrans('', '', s.punctuation)
+
     for p in soup.body.find_all('p'):
         for string in p.next_elements:
             string = str(string)
@@ -31,8 +34,9 @@ def scrap_text(soup):
             if re.match(r'\s', string):  # deletes 'standalone' whitespaces and other blank characters
                 continue
             else:
-                # TODO: navrhnout regex pro odstraneni VSECH nevhodnych znaku
-                string = re.sub(r'[,.|\s+]', ' ', string).strip()  # odstrani prebytecne mezery a jine znaky z retezce
+                string = string.translate(translator)
+                # TODO: navrhnout regex pro odstraneni VSECH nevhodnych znaku - HOTOVO
+                # string = re.sub(r'[,.|\s+]', ' ', string).strip()  # odstrani prebytecne mezery a jine znaky z retezce
                 yield string
 
 
