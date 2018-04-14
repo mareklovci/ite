@@ -4,20 +4,15 @@
 
 from urllib import request as req
 
-
 def read_website(url: str) -> str:
     try:
         fr = req.urlopen(url)
         text = fr.read()
         fr.close()
     except req.HTTPError as err:
-        if err.code == 404:
-            print('Server unavailable')
-            text = ''
-        else:
-            # Marek Lovčí - nevadí místo raise?
-            print('Error: ', err.code)
-            text = ''
+        print('Error', str(err.code) + ':', err.msg)
+        text = ''
+
     return text
 
 
