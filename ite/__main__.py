@@ -29,12 +29,23 @@ def main():
     # url = 'https://portal.zcu.cz/portal/'
     # url = 'https://www.tensorflow.org/'
 
+    saved_urls_set = set()
+
     levels = {0: [url]}
-    for i in range(2):
+    for i in range(10):
         for url in levels[i]:
             print('read...') # výpis do konzole, že se něco děje - smažte, jestli se vám to nelíbí :D
             html = read_website(url)
             urls, title, text = process_html(html)
+
+            # řešení křížových odkazů
+            if url in saved_urls_set:
+                print('Duplicit url skipped')
+                #levels[i + 1] = urls
+                levels[i + 1] = urls
+                continue
+
+            saved_urls_set.add(url)
             save(title, text, url)
             levels[i + 1] = urls
 
