@@ -7,7 +7,7 @@ import string as s
 import re
 from unidecode import unidecode
 from bs4 import BeautifulSoup
-
+import time
 
 def get_urls(soup) -> str:
     url_pattern = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
@@ -18,7 +18,7 @@ def get_urls(soup) -> str:
         if re.match(url_pattern, href):
             yield href
 
-
+# Místo pro optimalizaci: cca 1/2 doby běhu programu
 def scrap_text(soup):
     # hotfix - vrácení prázdného stringu v případě soup.body = None
     if not soup.body:
@@ -45,7 +45,7 @@ def group_text(scrap):
     string = re.sub(r'\s+', ' ', string)
     return string
 
-def discard_interpunction(text, chars_to_discard = ['\'','\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>', ' ']):
+def discard_interpunction(text, chars_to_discard = [':', '\'','\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>', ' ']):
     """
     Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
     """
@@ -63,7 +63,7 @@ def failed_title():
 
 def make_title(soup) -> str:
     # hotfix - v případě nenalezení head nebo head.text
-    if not soup.head or not soup.head.text:
+    if not soup.head or not soup.head.title:
         return failed_title()
 
     title: str = soup.head.title.text
@@ -97,6 +97,7 @@ def process_html(html: str):
     :param html: html to process
     :return: urls, title, text
     """
+    # BeautifulSoup zabírá určitý nezanedbatelný čas - zvážit
     soup = BeautifulSoup(html, 'html.parser')
     urls = process_urls(soup)
     title = make_title(soup)

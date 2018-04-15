@@ -6,6 +6,8 @@ import json
 from ite import read_website
 from ite import process_html
 import os
+import time
+from collections import deque
 
 __all__ = ('main',)  # list of public objects of module
 
@@ -22,33 +24,72 @@ def save(title: str, content: str, url: str):
 
 
 def main():
-    url = 'https://en.wikipedia.org/wiki/Drosera_regia'
-    # url = 'http://vykuphubhalze.eu/'
-    # url = 'http://legacy.carnivorousplants.org/cpn/articles/CPNv34n3p85_91.pdf'
-    # url = 'https://www.seznam.cz/'
-    # url = 'https://portal.zcu.cz/portal/'
-    # url = 'https://www.tensorflow.org/'
+    #start = time.time()
 
-    saved_urls_set = set()
+    # Prostor pro vstupní URL
+    # start_url = 'https://en.wikipedia.org/wiki/Drosera_regia'
+    # start_url = 'http://vykuphubhalze.eu/'
+    # start_url = 'http://legacy.carnivorousplants.org/cpn/articles/CPNv34n3p85_91.pdf'
+    # start_url = 'https://www.seznam.cz/'
+    start_url = 'https://portal.zcu.cz/portal/'
+    # start_url = 'https://www.tensorflow.org/'
+    # start_url = 'https://pornhub.com'
 
-    levels = {0: [url]}
-    for i in range(10):
-        for url in levels[i]:
-            print('read...') # výpis do konzole, že se něco děje - smažte, jestli se vám to nelíbí :D
-            html = read_website(url)
-            urls, title, text = process_html(html)
+    # Inicializace setů s uloženými urls
+    saved_urls = set()
+    urls_to_process = deque()
+    saved_urls.add(start_url)
+    urls_to_process.append(start_url)
 
-            # řešení křížových odkazů
-            if url in saved_urls_set:
-                print('Duplicit url skipped')
-                #levels[i + 1] = urls
-                levels[i + 1] = urls
-                continue
+    # Proměnné řešící logiku hloubky
+    urls_per_level = 1
+    counted_urls = 0
 
-            saved_urls_set.add(url)
-            save(title, text, url)
-            levels[i + 1] = urls
+    # Hloubka samotná
+    depth = 0
 
+    # Cyklus zpracovávající po sobě řazené URLS ve frontě
+    while depth < 2:
+        # Reakce na případ, že už nejsou žádné další stránky k prohledání
+        # Pro množství u většiny běžných stránek by nemělo nastat
+        if not urls_to_process:
+            print('Byli uloženy veškeré stránky dosažitelné ze vstupního URL')
+            exit(0)
+
+        # Výpis pro vývojáře
+        print('read...')
+
+        # URL ke zpracování
+        url_to_read = urls_to_process.popleft()
+
+        # HTML ke zpracování
+        html = read_website(url_to_read)
+
+        # Zpracování HTML
+        urls, title, text = process_html(html)
+
+        # Uložení JSONU s potřebnými daty
+        save(title, text, url_to_read)
+
+        # Uložení zpracovaného URL do setu již zpracovaných
+        saved_urls.add(url_to_read)
+
+        # Přidání všech doposud neuložených URLS do fronty k zpracování
+        for url in urls:
+            if url not in saved_urls:
+                urls_to_process.append(url)
+                counted_urls += 1
+
+        # Logika hloubky
+        urls_per_level -= 1
+        if urls_per_level < 1:
+            urls_per_level = counted_urls
+            counted_urls = 0
+            depth += 1
+
+    # Prostor pro měření času
+    #end = time.time()
+    #print('time:',end-start,'s')
 
 if __name__ == '__main__':
     main()
