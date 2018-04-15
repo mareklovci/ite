@@ -35,10 +35,12 @@ def main():
     # start_url = 'https://www.tensorflow.org/'
     # start_url = 'https://pornhub.com'
 
-    # Inicializace setů s uloženými urls
+    # Inicializace setu s již uloženými URLS
     saved_urls = set()
-    urls_to_process = deque()
     saved_urls.add(start_url)
+
+    # Inicializace fronty URLS ke zpracování
+    urls_to_process = deque()
     urls_to_process.append(start_url)
 
     # Proměnné řešící logiku hloubky
