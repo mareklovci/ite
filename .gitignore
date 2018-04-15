@@ -104,5 +104,10 @@ ENV/
 .idea/
 .vscode/
 
+# Remove extensionless files within storage
+storage/*       # removes everything
+storage/!*/     # unignores anything that is a directory
+storage/!*.*    # unignores all files with an extension
+
 # Storage
 storage/*.json
