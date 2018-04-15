@@ -8,8 +8,9 @@ import re
 from unidecode import unidecode
 from bs4 import BeautifulSoup
 import time
+from urllib.parse import urljoin
 
-def get_urls(soup) -> str:
+def get_urls(soup, current_url) -> str:
     url_pattern = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
     for link in soup.find_all('a'):
         href = link.get('href')
@@ -17,6 +18,10 @@ def get_urls(soup) -> str:
             continue
         if re.match(url_pattern, href):
             yield href
+        else:
+            joined_url = urljoin(current_url, href)
+            print(joined_url)
+            yield joined_url
 
 # Místo pro optimalizaci: cca 1/2 doby běhu programu
 def scrap_text(soup):
@@ -83,14 +88,14 @@ def process_text(soup):
     return text
 
 
-def process_urls(soup):
-    urls = get_urls(soup)
+def process_urls(soup, current_url):
+    urls = get_urls(soup, current_url)
     urls = filter(lambda x: not re.match(r'^(.*?)\.pdf', x), urls)  # filter pdf files
     urls = set(urls)
     return urls
 
 
-def process_html(html: str):
+def process_html(html: str, current_url):
     """
     Processes HTML code. Separates urls, title and actual content. Serves as a "one call for all" function.
 
@@ -99,7 +104,7 @@ def process_html(html: str):
     """
     # BeautifulSoup zabírá určitý nezanedbatelný čas - zvážit
     soup = BeautifulSoup(html, 'html.parser')
-    urls = process_urls(soup)
+    urls = process_urls(soup, current_url)
     title = make_title(soup)
     if not title:
         return '', '', ''

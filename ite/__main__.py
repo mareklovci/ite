@@ -78,7 +78,7 @@ def main():
             continue
 
         # Zpracování HTML
-        urls, title, text = process_html(html)
+        urls, title, text = process_html(html, url_to_read)
 
         # Pokud se nepodařilo zpracovat HTML, přeskočí další zpracování
         if not title:
