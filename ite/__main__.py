@@ -24,14 +24,14 @@ def save(title: str, content: str, url: str):
 
 
 def main():
-    #start = time.time()
+    # start = time.time()
 
     # Prostor pro vstupní URL
     # start_url = 'https://en.wikipedia.org/wiki/Drosera_regia'
     # start_url = 'http://vykuphubhalze.eu/'
     # start_url = 'http://legacy.carnivorousplants.org/cpn/articles/CPNv34n3p85_91.pdf'
-    # start_url = 'https://www.seznam.cz/'
-    start_url = 'https://portal.zcu.cz/portal/'
+    start_url = 'https://www.seznam.cz/'
+    # start_url = 'https://portal.zcu.cz/portal/'
     # start_url = 'https://www.tensorflow.org/'
     # start_url = 'https://pornhub.com'
 
@@ -67,8 +67,27 @@ def main():
         # HTML ke zpracování
         html = read_website(url_to_read)
 
+        # Pokud se nepodařilo načíst HTML, přeskočí další zpracování
+        # TODO: THO: sjednotit přeskakování do 1 metody
+        if not html:
+            urls_per_level -= 1
+            if urls_per_level < 1:
+                urls_per_level = counted_urls
+                counted_urls = 0
+                depth += 1
+            continue
+
         # Zpracování HTML
         urls, title, text = process_html(html)
+
+        # Pokud se nepodařilo zpracovat HTML, přeskočí další zpracování
+        if not title:
+            urls_per_level -= 1
+            if urls_per_level < 1:
+                urls_per_level = counted_urls
+                counted_urls = 0
+                depth += 1
+            continue
 
         # Uložení JSONU s potřebnými daty
         save(title, text, url_to_read)
@@ -90,8 +109,8 @@ def main():
             depth += 1
 
     # Prostor pro měření času
-    #end = time.time()
-    #print('time:',end-start,'s')
+    # end = time.time()
+    # print('time:',end-start,'s')
 
 if __name__ == '__main__':
     main()

@@ -64,7 +64,7 @@ def failed_title():
 def make_title(soup) -> str:
     # hotfix - v případě nenalezení head nebo head.text
     if not soup.head or not soup.head.title:
-        return failed_title()
+        return ''
 
     title: str = soup.head.title.text
     splt = title.lower().split()
@@ -101,6 +101,8 @@ def process_html(html: str):
     soup = BeautifulSoup(html, 'html.parser')
     urls = process_urls(soup)
     title = make_title(soup)
+    if not title:
+        return '', '', ''
     text = process_text(soup)
     return urls, title, text
 
