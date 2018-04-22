@@ -20,7 +20,6 @@ def get_urls(soup, current_url) -> str:
             yield href
         else:
             joined_url = urljoin(current_url, href)
-            print(joined_url)
             yield joined_url
 
 # Místo pro optimalizaci: cca 1/2 doby běhu programu
