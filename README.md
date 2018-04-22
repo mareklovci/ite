@@ -10,6 +10,8 @@ V případě použití IDE jako PyCharm, atp. se spouští soubor `__main__.py`.
 ### Command line
 Přes příkazovou řádku se program spouští příkazem `$ python -m ite` v adresáři programu.
 
+![Run program with CLI](/docs/img/cli-run.png)
+
 ## Deadline!!!
 Musí být hotovo do 18. května (konec letního semestru)!
 
