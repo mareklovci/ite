@@ -11,7 +11,7 @@ import tornado.ioloop as ioloop
 from tornado.web import StaticFileHandler
 
 NONAME = 'UNKNOWN'
-root = os.path.normpath(dirname(__file__) + os.sep + os.pardir + '/gui/')
+root = os.path.normpath(dirname(__file__) + os.sep + os.pardir + '/www/')
 
 
 class MainHandler(tornado.web.RequestHandler):
