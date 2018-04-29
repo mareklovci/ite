@@ -3,11 +3,27 @@
 """ITE 2018"""
 
 import json
+import io
 from ite import read_website
 from ite import process_html
 import os
 import time
 from collections import deque
+
+
+# Inicializace setu s již uloženými URLS
+saved_urls = set()
+
+# Inicializace fronty URLS ke zpracování
+urls_to_process = deque()
+
+# Proměnné řešící logiku hloubky
+urls_per_level = 1
+counted_urls = 0
+
+# Hloubka samotná
+depth = 0
+
 
 __all__ = ('main',)  # list of public objects of module
 
@@ -15,40 +31,39 @@ __all__ = ('main',)  # list of public objects of module
 def save(title: str, content: str, url: str):
     json_file = {'title': title, 'url': url, 'content': content}
     path = '../storage/'
+    path = 'D:/ite/storage/'
     if not os.path.exists(path):
         path = './storage/'
     path = os.path.join(path + title + '.json')
-    with open(path, 'w+') as fp:
-        json.dump(json_file, fp)
-        fp.flush()
+
+    with io.open(path, 'w', encoding='utf8') as jsf:
+        data = json.dumps(json_file, ensure_ascii=False)
+        try:
+            jsf.write(data)
+        except TypeError:
+            # Decode data to Unicode first
+            jsf.write(data.decode('utf8'))
+
+
+def skip_page():
+    global depth, urls_per_level, counted_urls, urls_to_process, saved_urls
+    urls_per_level -= 1
+    if urls_per_level < 1:
+        urls_per_level = counted_urls
+        counted_urls = 0
+        depth += 1
 
 
 def main():
     # start = time.time()
 
-    # Prostor pro vstupní URL
-    # start_url = 'https://en.wikipedia.org/wiki/Drosera_regia'
-    # start_url = 'http://vykuphubhalze.eu/'
-    # start_url = 'http://legacy.carnivorousplants.org/cpn/articles/CPNv34n3p85_91.pdf'
-    start_url = 'https://www.seznam.cz/'
-    # start_url = 'https://portal.zcu.cz/portal/'
-    # start_url = 'https://www.tensorflow.org/'
-    # start_url = 'https://pornhub.com'
+    start_url = 'https://portal.zcu.cz/portal/'
 
-    # Inicializace setu s již uloženými URLS
-    saved_urls = set()
+    # Inicializace globálních proměnných
+    global depth, urls_per_level, counted_urls, urls_to_process, saved_urls
     saved_urls.add(start_url)
-
-    # Inicializace fronty URLS ke zpracování
-    urls_to_process = deque()
     urls_to_process.append(start_url)
 
-    # Proměnné řešící logiku hloubky
-    urls_per_level = 1
-    counted_urls = 0
-
-    # Hloubka samotná
-    depth = 0
 
     # Cyklus zpracovávající po sobě řazené URLS ve frontě
     while depth < 2:
@@ -68,13 +83,8 @@ def main():
         html = read_website(url_to_read)
 
         # Pokud se nepodařilo načíst HTML, přeskočí další zpracování
-        # TODO: THO: sjednotit přeskakování do 1 metody
         if not html:
-            urls_per_level -= 1
-            if urls_per_level < 1:
-                urls_per_level = counted_urls
-                counted_urls = 0
-                depth += 1
+            skip_page()
             continue
 
         # Zpracování HTML
@@ -82,11 +92,7 @@ def main():
 
         # Pokud se nepodařilo zpracovat HTML, přeskočí další zpracování
         if not title:
-            urls_per_level -= 1
-            if urls_per_level < 1:
-                urls_per_level = counted_urls
-                counted_urls = 0
-                depth += 1
+            skip_page()
             continue
 
         # Uložení JSONU s potřebnými daty

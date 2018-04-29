@@ -60,7 +60,6 @@ def discard_interpunction(text, chars_to_discard = [':', '\'','\"', '*', '.', ',
 def failed_title():
     """
     Hotfix  - v případě, že soup nemá title
-            - TODO: investigace stránek s url dle souborů empty-string-XXXXXX, proč zde není title?
             - random nemá hlubší výzanm, jen aby se to ukládalo pod jiným názvem :D
     """
     return 'failed-title-' + str(random.randint(0, 100000))
