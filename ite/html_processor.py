@@ -49,7 +49,7 @@ def group_text(scrap):
     string = re.sub(r'\s+', ' ', string)
     return string
 
-def discard_interpunction(text, chars_to_discard = [':', '\'','\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>', ' ']):
+def discard_interpunction(text, chars_to_discard = ['!',':', '\'','\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>', ' ']):
     """
     Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
     """
