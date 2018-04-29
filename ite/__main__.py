@@ -31,7 +31,6 @@ __all__ = ('main',)  # list of public objects of module
 def save(title: str, content: str, url: str):
     json_file = {'title': title, 'url': url, 'content': content}
     path = '../storage/'
-    path = 'D:/ite/storage/'
     if not os.path.exists(path):
         path = './storage/'
     path = os.path.join(path + title + '.json')
