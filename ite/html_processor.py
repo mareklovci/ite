@@ -49,13 +49,6 @@ def group_text(scrap):
     string = re.sub(r'\s+', ' ', string)
     return string
 
-def discard_interpunction(text, chars_to_discard = ['!',':', '\'','\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>', ' ']):
-    """
-    Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
-    """
-    for char in chars_to_discard:
-        text = text.replace(char, '')
-    return text
 
 def failed_title():
     """
@@ -70,6 +63,7 @@ def make_title(soup) -> str:
         return ''
 
     title: str = soup.head.title.text
+    return title
     splt = title.lower().split()
     for item in splt:
         if re.match(r'[^a-zA-Z\d\s:]', item):

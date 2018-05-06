@@ -27,8 +27,17 @@ depth = 0
 
 __all__ = ('main',)  # list of public objects of module
 
+def make_safe_filename(text, chars_to_discard = ['\t', '\n', '!',':', '\'','\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>']):
+    """
+    Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
+    """
+    for char in chars_to_discard:
+        text = text.replace(char, '')
+    return text
+
 
 def save(title: str, content: str, url: str):
+    title = make_safe_filename(title)
     json_file = {'title': title, 'url': url, 'content': content}
     path = '../storage/'
     if not os.path.exists(path):
