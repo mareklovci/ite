@@ -7,7 +7,7 @@ Vaším úkolem bude:
 2. vytvoření modulu, který zpracuje HTML, získá obsah stránky a nalezne odkazy, - **20b**
     > Pro vyčištění HTML je možné využít knihovnu, např. [Beautiful Soup][3],
     > ale kreativitě se meze "nekladou".
-    * nalezené odkazy budou opět zpracovány *"robotem"*,
+    * nalezené odkazy budou opět zpracovány *"robotem"*
     > "Zanoření" bude omezeno např. časově nebo hloubkou (**4**).
     > Myslete na křížové odkazy.
 3. získaná data (obsah, odkazy) budou uloženy na disk, případně do databáze, - **15b**
@@ -32,10 +32,10 @@ požadavky na vyhledávání a přistupuje k, v té době aktuálním, datům.
 ## Požadavky
 
 * Python 3
-* Při odevzdávání semestrální práce bude součastí popis funkce (minimálně jaké stránky jsou stahovány) a **podrobný** návod jak Vaše řešení spustit. V návodu bude i "výpis" toho co je potřebné k jeho chodu (klidně může být součastí [conda environment][4]), ušetříte nám tím spoustu nervů při spuštění. Berte to tak, že odevzdáváte produkt zákazníkovi.
+* Při odevzdávání semestrální práce bude součástí popis funkce (minimálně jaké stránky jsou stahovány) a **podrobný** návod jak Vaše řešení spustit. V návodu bude i "výpis" toho co je potřebné k jeho chodu (klidně může být součastí [conda environment][4]), ušetříte nám tím spoustu nervů při spuštění. Berte to tak, že odevzdáváte produkt zákazníkovi.
 * Jako server využijte Tornado, ale pokud budete chtít zapojit i něco jiného (třeba Node.js), tak můžete.
 * Fulltextové vyhledávání naprogramujte sami, využití externích knihoven opodstatněte.
-    > Pokud máté zkušenosti, tak doporučujeme použití nějaké databáze.
+    > Pokud máte zkušenosti, tak doporučujeme použití nějaké databáze.
 
 > **TIP**: Obecně se snažte využívat knihovny/moduly, které jsou obecně využívány. Pokud to má na githubu jednotky hvězd, tak radši použijte něco jineho.
 >
