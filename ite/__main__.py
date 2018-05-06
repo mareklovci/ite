@@ -56,7 +56,7 @@ def skip_page():
 def main():
     # start = time.time()
 
-    start_url = 'https://portal.zcu.cz/portal/'
+    start_url = 'http://www.zcu.cz/'
 
     # Inicializace globálních proměnných
     global depth, urls_per_level, counted_urls, urls_to_process, saved_urls

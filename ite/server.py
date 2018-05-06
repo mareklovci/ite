@@ -9,6 +9,7 @@ from os.path import dirname, join
 import tornado.web
 import tornado.ioloop as ioloop
 from tornado.web import StaticFileHandler
+from ite.search import search
 
 NONAME = 'UNKNOWN'
 root = os.path.normpath(dirname(__file__) + os.sep + os.pardir + '/www/')
@@ -31,53 +32,29 @@ class MainHandler(tornado.web.RequestHandler):
             self.write('404: Not Found')
 
 
-class NameHandler(tornado.web.RequestHandler):
+class SearchHandler(tornado.web.RequestHandler):
 
     def data_received(self, chunk):
         pass
 
     def get(self):
-        name = self.get_argument('name', None)
-        if name is not None:
-            self.set_cookie('name', name)
-        else:
-            name = self.get_cookie('name', NONAME)
-        # Nastaveni typu dat, ktere odesilame prohlizeci
-        self.set_header('Content-Type', 'text/html')
-        self.render('form.html', name=name)
+        param = self.get_argument('text', None)
 
-
-class FormHandler(tornado.web.RequestHandler):
-
-    def data_received(self, chunk):
-        pass
-
-    def get(self):
-        name = self.get_cookie('name', NONAME)
-        param = self.get_argument('message', None)
+        stranky = search(param)
 
         if param:
-            self.set_header('Content-Type', 'text/plain')
-            self.write('Jmenujete se <b>{}</b> a zadali jste: {}'.format(
-                name, param))
-        else:
             self.set_header('Content-Type', 'text/html')
-            self.write('<html><head>'
-                       '<meta content="text/html; charset=UTF-8" /></head>'
-                       '<body><form action="/form" method="GET">'
-                       '<input type="text" name="message" >'
-                       '<input type="submit" value="OK" >'
-                       '</form>'
-                       u'<a href="/">Hlavní stránka</a>'
-                       '</body></html>')
+            self.write(stranky)
+        else:
+           self.set_header('Content-Type', 'text/html')
+           self.write('nic')
 
 
 if __name__ == '__main__':
     # Nastaveni handleru (pristupovych bodu)
     app = tornado.web.Application([
         (r'/', MainHandler),
-        (r'/form', FormHandler),
-        (r'/name', NameHandler),
+        (r'/search', SearchHandler),
         # Handler vracejici staticke soubory, napr. png, zip atp.
         (r'/(.*)', StaticFileHandler, {'path': root}),
     ])
