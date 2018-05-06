@@ -27,10 +27,10 @@ depth = 0
 
 __all__ = ('main',)  # list of public objects of module
 
-def make_safe_filename(text, chars_to_discard = ['\t', '\n', '!',':', '\'','\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>']):
-    """
-    Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
-    """
+
+def make_safe_filename(text, chars_to_discard=('\t', '\n', '!', ':', '\'', '\"', '*', '.', ',', '|', '?', '/', '\\',
+                                               '<', '>')):
+    """Odstraní nebezpečné znaky u titlu - aby šel uložit soubor"""
     for char in chars_to_discard:
         text = text.replace(char, '')
     return text
@@ -71,7 +71,6 @@ def main():
     global depth, urls_per_level, counted_urls, urls_to_process, saved_urls
     saved_urls.add(start_url)
     urls_to_process.append(start_url)
-
 
     # Cyklus zpracovávající po sobě řazené URLS ve frontě
     while depth < 2:
@@ -125,6 +124,7 @@ def main():
     # Prostor pro měření času
     # end = time.time()
     # print('time:',end-start,'s')
+
 
 if __name__ == '__main__':
     main()

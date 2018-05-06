@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import json
 import re
@@ -7,21 +10,21 @@ import time
 
 
 def htmlyfy(pages_with_searched_text, text_length, cas_hledani):
-
     html = ''
-
-    html += '<p class ="lead" > Počet nalezených výsledků: ' + str(len(pages_with_searched_text)) + ' (' + str(round(cas_hledani, 2)) + ' s)' + '</p>'
-
+    html += '<p class ="lead" > Počet nalezených výsledků: ' + str(len(pages_with_searched_text)) + ' (' + \
+            str(round(cas_hledani, 2)) + ' s)' + '</p>'
     for item in pages_with_searched_text:
         html += '<div class=\"starter-template\">\n'
         html += '<h1>' + item['title'] + '</h1>'
         html += '<a href="' + item['url'] + '">' + item['url'] + '</a>\n'
-        html += '<p class=\"lead\">...' + item['nalezeny_text'][:200] + '<strong>' + item['nalezeny_text'][200:200+text_length] + '</strong>' + item['nalezeny_text'][200+text_length:] + '...</p>\n'
+        html += '<p class=\"lead\">...' + item['nalezeny_text'][:200] + '<strong>' + \
+                item['nalezeny_text'][200:200+text_length] + '</strong>' + item['nalezeny_text'][200+text_length:] + \
+                '...</p>\n'
         html += '</div>'
-
     return html
 
 
+# noinspection PyUnresolvedReferences
 def search(text):
     start = time.time()
     # Cesta ke složce s daty
@@ -39,7 +42,7 @@ def search(text):
                 json_dict = json.loads(json_file, encoding='utf-8')
 
                 # Nalezený text
-                match = re.search(text, json_dict['content'])
+                match = re.search(text, json_dict['content'], re.IGNORECASE)
 
                 if match:
                     begin = match.regs[0][0] - 200
@@ -58,8 +61,9 @@ def search(text):
     return htmlyfy(pages_with_searched_text, len(text), end-start)
 
 
-
+def main():
+    search('uni')
 
 
 if __name__ == '__main__':
-    search('uni')
+    main()

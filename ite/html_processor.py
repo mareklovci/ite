@@ -7,8 +7,8 @@ import string as s
 import re
 from unidecode import unidecode
 from bs4 import BeautifulSoup
-import time
 from urllib.parse import urljoin
+
 
 def get_urls(soup, current_url) -> str:
     url_pattern = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
@@ -21,6 +21,7 @@ def get_urls(soup, current_url) -> str:
         else:
             joined_url = urljoin(current_url, href)
             yield joined_url
+
 
 # Místo pro optimalizaci: cca 1/2 doby běhu programu
 def scrap_text(soup):
@@ -44,6 +45,16 @@ def scrap_text(soup):
                 yield string
 
 
+def discard_interpunction(text, chars_to_discard=('!', ':', '\'', '\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>',
+                                                  ' ')):
+    """
+    Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
+    """
+    for char in chars_to_discard:
+        text = text.replace(char, '')
+    return text
+
+
 def group_text(scrap):
     string = ' '.join(scrap)
     string = re.sub(r'\s+', ' ', string)
@@ -57,13 +68,13 @@ def failed_title():
     """
     return 'failed-title-' + str(random.randint(0, 100000))
 
+
 def make_title(soup) -> str:
     # hotfix - v případě nenalezení head nebo head.text
     if not soup.head or not soup.head.title:
         return ''
 
     title: str = soup.head.title.text
-    return title
     splt = title.lower().split()
     for item in splt:
         if re.match(r'[^a-zA-Z\d\s:]', item):
@@ -92,6 +103,7 @@ def process_html(html: str, current_url):
     Processes HTML code. Separates urls, title and actual content. Serves as a "one call for all" function.
 
     :param html: html to process
+    :param current_url:
     :return: urls, title, text
     """
     # BeautifulSoup zabírá určitý nezanedbatelný čas - zvážit

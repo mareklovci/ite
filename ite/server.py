@@ -43,7 +43,6 @@ class SearchHandler(tornado.web.RequestHandler):
         stranky = search(param)
 
         if param:
-
             try:
                 # Nacteni obsahu ze souboru
                 with io.open(join(root, 'search.html'),
@@ -53,7 +52,6 @@ class SearchHandler(tornado.web.RequestHandler):
                 self.set_status(404)
                 # Nic jsem nenasel, vracim error.
                 self.write('404: Not Found')
-
 
             self.set_header('Content-Type', 'text/html')
             self.write(stranky)
