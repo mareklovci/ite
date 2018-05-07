@@ -5,3 +5,9 @@ body {
   padding: 3rem 1.5rem;
   text-align: center;
 }
+.mb-1 {
+  word-wrap: break-word;
+}
+.list-group-item {
+  text-align: left;
+}

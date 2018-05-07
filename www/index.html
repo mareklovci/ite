@@ -43,10 +43,21 @@
     <main role="main" class="container">
 
       <div class="starter-template">
-        {}
+          {% block body %}
+          <h1>Úvodní stránka</h1>
+          <p class="lead">Prosím zadejte hledané slovo.</p>
+          {% end %}
       </div>
 
+
     </main><!-- /.container -->
+
+    <script>
+        $('#list-tab a').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        })
+    </script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

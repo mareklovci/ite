@@ -9,29 +9,13 @@ import io
 import time
 
 
-def htmlyfy(pages_with_searched_text, text_length, cas_hledani):
-    html = ''
-    html += '<p class ="lead" > Počet nalezených výsledků: ' + str(len(pages_with_searched_text)) + ' (' + \
-            str(round(cas_hledani, 2)) + ' s)' + '</p>'
-    for item in pages_with_searched_text:
-        html += '<div class=\"starter-template\">\n'
-        html += '<h1>' + item['title'] + '</h1>'
-        html += '<a href="' + item['url'] + '">' + item['url'] + '</a>\n'
-        html += '<p class=\"lead\">...' + item['nalezeny_text'][:200] + '<strong>' + \
-                item['nalezeny_text'][200:200+text_length] + '</strong>' + item['nalezeny_text'][200+text_length:] + \
-                '...</p>\n'
-        html += '</div>'
-    return html
-
-
-# noinspection PyUnresolvedReferences
 def search(text):
     start = time.time()
     # Cesta ke složce s daty
     directory = os.path.normpath(dirname(__file__) + os.sep + os.pardir + '/storage/')
 
     # Množina stránek s nalezeným textem
-    pages_with_searched_text = []
+    items = []
 
     # Iterace přes všechny soubory v databázy
     for filename in os.listdir(directory):
@@ -45,20 +29,25 @@ def search(text):
                 match = re.search(text, json_dict['content'], re.IGNORECASE)
 
                 if match:
-                    begin = match.regs[0][0] - 200
-                    end = match.regs[0][1] + 200
-
+                    first_occurrence = match.span()
+                    begin = first_occurrence[0] - 50
+                    end = first_occurrence[1] + 50
                     # Položka s daty k zobrazení na stránce
                     polozka = {
                         'title': json_dict['title'],
                         'url': json_dict['url'],
-                        'nalezeny_text': json_dict['content'][begin: end]
+                        'content_begin': json_dict['content'][begin:first_occurrence[0]],
+                        'content_end': json_dict['content'][first_occurrence[1]:end],
+                        'searched': json_dict['content'][first_occurrence[0]:first_occurrence[1]]
                     }
-
-                    pages_with_searched_text.append(polozka)
-
+                    items.append(polozka)
     end = time.time()
-    return htmlyfy(pages_with_searched_text, len(text), end-start)
+    data = {
+        'findings': len(items),
+        'time': round(end-start, 2),
+        'items': items
+    }
+    return data
 
 
 def main():
