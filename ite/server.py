@@ -11,7 +11,6 @@ import tornado.ioloop as ioloop
 from tornado.web import StaticFileHandler
 from ite.search import search
 
-NONAME = 'UNKNOWN'
 root = os.path.normpath(dirname(__file__) + os.sep + os.pardir + '/www/')
 
 
@@ -25,7 +24,8 @@ class MainHandler(tornado.web.RequestHandler):
             # Nacteni obsahu ze souboru
             with io.open(join(root, 'index.html'),
                          encoding='utf-8') as f:
-                self.write(f.read())
+                self.write(f.read().format('<h1>Úvodní stránka</h1>'
+                                           '<p class="lead">Prosím zadejte hledané slovo.</p>'))
         except IOError:
             self.set_status(404)
             # Nic jsem nenasel, vracim error.
@@ -45,7 +45,7 @@ class SearchHandler(tornado.web.RequestHandler):
         if param:
             try:
                 # Nacteni obsahu ze souboru
-                with io.open(join(root, 'search.html'),
+                with io.open(join(root, 'index.html'),
                              encoding='utf-8') as f:
                     self.write(f.read().format(stranky))
             except IOError:
@@ -58,9 +58,9 @@ class SearchHandler(tornado.web.RequestHandler):
         else:
             try:
                 # Nacteni obsahu ze souboru
-                with io.open(join(root, 'not-found.html'),
+                with io.open(join(root, 'index.html'),
                              encoding='utf-8') as f:
-                    self.write(f.read().format(stranky))
+                    self.write(f.read().format('<h1>Žádný výsledek nenalezen</h1>'))
             except IOError:
                 self.set_status(404)
                 # Nic jsem nenasel, vracim error.
