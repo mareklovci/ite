@@ -15,10 +15,8 @@ from ite.search import search
 root = os.path.normpath(dirname(__file__) + os.sep + os.pardir + '/www/')
 
 
+# noinspection PyAbstractClass
 class MainHandler(tornado.web.RequestHandler):
-
-    def data_received(self, chunk):
-        pass
 
     def get(self):
         self.render(join(root, 'index.html'))
