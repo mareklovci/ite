@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 """HTML reading and processing"""
 
-import random
 import string as s
 import re
-from unidecode import unidecode
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
@@ -61,28 +59,11 @@ def group_text(scrap):
     return string
 
 
-def failed_title():
-    """
-    Hotfix  - v případě, že soup nemá title
-            - random nemá hlubší výzanm, jen aby se to ukládalo pod jiným názvem :D
-    """
-    return 'failed-title-' + str(random.randint(0, 100000))
-
-
 def make_title(soup) -> str:
     # hotfix - v případě nenalezení head nebo head.text
     if not soup.head or not soup.head.title:
         return ''
-
-    title: str = soup.head.title.text
-    splt = title.lower().split()
-    for item in splt:
-        if re.match(r'[^a-zA-Z\d\s:]', item):
-            splt.remove(item)
-    title = '-'.join(splt)
-    unaccented_title = unidecode(title)
-    unaccented_title = discard_interpunction(unaccented_title)
-    return unaccented_title
+    return soup.head.title.text
 
 
 def process_text(soup):
