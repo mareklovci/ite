@@ -40,7 +40,7 @@ def main():
         (r'/search', SearchHandler),
         # Handler vracejici staticke soubory, napr. png, zip atp.
         (r'/(.*)', StaticFileHandler, {'path': root}),
-    ], autoescape=None, template_path=root)
+    ], template_path=root)
     # Nastaveni portu, na kterem Tornado posloucha
     app.listen(8885)
     # Spusteni serveru

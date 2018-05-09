@@ -55,7 +55,7 @@ def _find_item(text, directory):
                 match = _match(text, json_dict['content'])
 
                 if match:
-                    polozka = _create_item(json_dict, 50, match)
+                    polozka = _create_item(json_dict, 150, match)
                     yield polozka
 
 
