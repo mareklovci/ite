@@ -25,11 +25,12 @@ def _create_item(json_dict: dict, span: int, match) -> dict:
     return item
 
 
-def _create_pack(items, start, end):
+def _create_pack(items, start, end, search_text):
     pack = {
         'findings': len(items),
         'time': round(end - start, 2),
-        'items': items
+        'items': items,
+        'search_text': search_text
     }
     return pack
 
@@ -69,7 +70,7 @@ def search(text):
     items = list(_find_item(text, directory))
 
     end = time.time()
-    data = _create_pack(items, start, end)
+    data = _create_pack(items, start, end, text)
     return data
 
 
