@@ -2,22 +2,20 @@
 
 {% block body %}
     <div class="alert alert-info" role="alert">
-        Počet nalezených výsledků: {{ data['findings'] }} ({{data['time'] }} s)
+        Počet nalezených výsledků: {{ data['findings'] }} ({{ data['time'] }} s)
     </div>
 
     <div class="row">
         <div class="col-7">
             <div class="list-group" id="list-tab" role="tablist">
                 {% for item in data['items'] %}
-                    {% block item %}
-                        <a onclick="return loadIframe('frame', this.href)" href="{{ item['url'] }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ item['title'] }}</h5>
-                            </div>
-                            <p class="mb-1">...{{ item['content_begin'] }}<b>{{ item['searched'] }}</b>{{ item['content_end'] }}...</p>
-                            <small>{{ item['url'] }}</small>
-                        </a>
-                    {% end %}
+                    <a onclick="return loadIframe('frame', this.href)" href="{{ item['url'] }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ item['title'] }}</h5>
+                        </div>
+                        <p class="mb-1">...{{ item['content_begin'] }}<b class="text-dark bg-warning">{{ item['searched'] }}</b>{{ item['content_end'] }}...</p>
+                        <small>{{ item['url'] }}</small>
+                    </a>
                 {% end %}
             </div>
         </div>
