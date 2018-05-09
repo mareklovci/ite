@@ -23,7 +23,7 @@
         <div class="col-5">
             <div class="tab-content sticky-top fixed-top-margin" id="nav-tabContent">
                 <a id="go-to-page-link" href="">
-                    <button id="go-to-page-btn" type="submit" class="btn btn-primary btn-lg btn-block mb-3" disabled style="display:none;">Go to the page</button>
+                    <button id="go-to-page-btn" type="submit" class="btn btn-secondary btn-lg btn-block mb-3" disabled >Go to the page</button>
                 </a>
 
                 <div class="embed-responsive embed-responsive-1by1">
@@ -67,7 +67,7 @@
             if ( $iframe.length ) {
                 $iframe.attr('style', "display:none;");
                 $iframe.attr('src', url);
-                $button.attr('style', "display:block;");
+                $button.attr('class', "btn btn-primary btn-lg btn-block mb-3");
                 $button.attr('disabled', false);
                 $link.attr('href', url);
                 $iframeBackground.attr('class', "loading");
