@@ -22,9 +22,7 @@
 
         <div class="col-5">
             <div class="tab-content sticky-top fixed-top-margin" id="nav-tabContent">
-                <a id="go-to-page-link" href="">
-                    <button id="go-to-page-btn" type="submit" class="btn btn-secondary btn-lg btn-block mb-3" disabled >Go to the page</button>
-                </a>
+                <a id="go-to-page-link" href="" class="btn btn-primary btn-lg disabled mb-3 btn-block" role="button" aria-disabled="true">Go to the page</a>
 
                 <div class="embed-responsive embed-responsive-1by1">
                     <div id="iframe-background" class="loaded">
@@ -60,51 +58,18 @@
     <script type="text/javascript">
         function loadIframe(url) {
             var $iframe = $('#' + "frame");
-            var $button = $('#' + "go-to-page-btn");
             var $link = $('#' + "go-to-page-link");
             var $iframeBackground = $('#' + "iframe-background");
 
             if ( $iframe.length ) {
                 $iframe.attr('style', "display:none;");
                 $iframe.attr('src', url);
-                $button.attr('class', "btn btn-primary btn-lg btn-block mb-3");
-                $button.attr('disabled', false);
                 $link.attr('href', url);
+                $link.attr('class', "btn btn-primary btn-lg mb-3 btn-block");
                 $iframeBackground.attr('class', "loading");
                 return false;
             }
             return true;
         }
     </script>
-
-    <!--
-        Loading animace
-    -->
-    <style>
-    .loading {
-    position: absolute;
-    top: 35%;
-    left: 35%;
-    transform: translate(-50%, -50%);
-    border: 16px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 16px solid #3498db;
-    width: 120px;
-    height: 120px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 1s linear infinite;
-    }
-
-    /* Safari */
-    @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-    }
-
-    @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-    }
-    </style>
-
 {% end %}

@@ -27,11 +27,11 @@
     Script zajišťující setrvání hodnoty ve vyhledávacím poli
 -->
 <script>
-document.getElementById("search-field").value = localStorage.getItem("comment");
+    document.getElementById("search-field").value = localStorage.getItem("comment");
 
-function saveComment() {
-    var comment = document.getElementById("search-field").value;
-    localStorage.setItem("comment", comment);
-    location.reload();
-}
+    function saveComment() {
+        var comment = document.getElementById("search-field").value;
+        localStorage.setItem("comment", comment);
+        location.reload();
+    }
 </script>
