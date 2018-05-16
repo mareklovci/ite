@@ -23,6 +23,8 @@ Jako uživatelské prostředí pro zadávání dotazů k vyhledání slouží HT
 
 3) Pro scrapování textu je v bs4 funkce 'get_text()', bohužel nefunguje podle očekávání a vrací list, kde každá položka je jeden znak. Proto tuto funkci nepoužíváme.
 
+4) Při opětovném spuštění websrapping robota se stránky duplikují v případě, že se ručně nesmaže obsah složky storage.
+
 [01]: /docs/assignment.md
 [03]: /docs/references.md
 
