@@ -1,7 +1,7 @@
 /* Script volající se po kliknutí na položku
     - Přechod ze stavu "loaded" do stavu "loading"
     - Přepnutí odkazu iframu
-    - Aktivace buttonu "Go to the page"
+    - Aktivace buttonu "Přejít na stránku"
     - Přepnutí odkazu buttonu
 */
 

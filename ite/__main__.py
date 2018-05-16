@@ -7,11 +7,11 @@ import io
 from ite import read_website
 from ite import process_html
 import os
-import time
 from collections import deque
 
 
 # Inicializace setu s již uloženými URLS
+# - pro zamezení ukládání křížových odkazů
 saved_urls = set()
 
 # Inicializace fronty URLS ke zpracování
@@ -24,12 +24,13 @@ counted_urls = 0
 # Hloubka samotná
 depth = 0
 
+prefix = 0
 
 __all__ = ('main',)  # list of public objects of module
 
 
-def make_safe_filename(text, chars_to_discard=('\t', '\n', '!', ':', '\'', '\"', '*', '.', ',', '|', '?', '/', '\\',
-                                               '<', '>')):
+def make_safe_filename(text, chars_to_discard=('\r', '\t', '\n', '!', ':', '\'', '\"', '*', '.', ',', '|', '?', '/',
+                                               '\\', '<', '>')):
     """Odstraní nebezpečné znaky u titlu - aby šel uložit soubor"""
     for char in chars_to_discard:
         text = text.replace(char, '')
@@ -37,12 +38,18 @@ def make_safe_filename(text, chars_to_discard=('\t', '\n', '!', ':', '\'', '\"',
 
 
 def save(title: str, content: str, url: str):
+    """
+    Na základě názvu, obsahu a url vygeneruje soubor s daty a uloží na disk do složky '../storage'
+    :param title: název stránky
+    :param content: obsah stránky
+    :param url: url stránky
+    """
+    global prefix
+    prefix += 1
     title = make_safe_filename(title)
     json_file = {'title': title, 'url': url, 'content': content}
     path = '../storage/'
-    if not os.path.exists(path):
-        path = './storage/'
-    path = os.path.join(path + title + '.json')
+    path = os.path.join(path + str(prefix) + ' - ' + title + '.json')
 
     with io.open(path, 'w', encoding='utf8') as jsf:
         data = json.dumps(json_file, ensure_ascii=False)
@@ -54,6 +61,7 @@ def save(title: str, content: str, url: str):
 
 
 def skip_page():
+    """Přeskočí nezpracovatelnout stránku"""
     global depth, urls_per_level, counted_urls, urls_to_process, saved_urls
     urls_per_level -= 1
     if urls_per_level < 1:
@@ -63,9 +71,10 @@ def skip_page():
 
 
 def main():
-    # start = time.time()
-
+    # Startovní url
     start_url = 'http://www.zcu.cz/'
+    # Hloubka prohledávání
+    max_depth = 2
 
     # Inicializace globálních proměnných
     global depth, urls_per_level, counted_urls, urls_to_process, saved_urls
@@ -73,15 +82,10 @@ def main():
     urls_to_process.append(start_url)
 
     # Cyklus zpracovávající po sobě řazené URLS ve frontě
-    while depth < 2:
-        # Reakce na případ, že už nejsou žádné další stránky k prohledání
-        # Pro množství u většiny běžných stránek by nemělo nastat
+    while depth < max_depth:
         if not urls_to_process:
             print('Byli uloženy veškeré stránky dosažitelné ze vstupního URL')
             exit(0)
-
-        # Výpis pro vývojáře
-        print('read...')
 
         # URL ke zpracování
         url_to_read = urls_to_process.popleft()
@@ -96,6 +100,10 @@ def main():
 
         # Zpracování HTML
         urls, title, text = process_html(html, url_to_read)
+
+        # Výpis do konzole
+        # - pro každou zpracovávanou stránku je vypsán její název pro vizualizaci běhu programu
+        print('Zpracování stránky {}'.format(str(title)))
 
         # Pokud se nepodařilo zpracovat HTML, přeskočí další zpracování
         if not title:
@@ -120,10 +128,6 @@ def main():
             urls_per_level = counted_urls
             counted_urls = 0
             depth += 1
-
-    # Prostor pro měření času
-    # end = time.time()
-    # print('time:',end-start,'s')
 
 
 if __name__ == '__main__':

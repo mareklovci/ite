@@ -9,6 +9,12 @@ from urllib.parse import urljoin
 
 
 def get_urls(soup, current_url) -> str:
+    """
+    Vrátí odkazy nacházející se na stránce
+    :param soup: HTML předzpracované balíčkem beautifulsoup - soup object
+    :param current_url: současné url pro relativní odkazy
+    :return: url získané ze soup
+    """
     url_pattern = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)'
     for link in soup.find_all('a'):
         href = link.get('href')
@@ -21,13 +27,14 @@ def get_urls(soup, current_url) -> str:
             yield joined_url
 
 
-# Místo pro optimalizaci: cca 1/2 doby běhu programu
 def scrap_text(soup):
-    # hotfix - vrácení prázdného stringu v případě soup.body = None
+    """Returns string from bs4 placed in <p> tag"""
+
+    # Vrácení prázdného stringu v případě soup.body = None
     if not soup.body:
         return ''
 
-    translator = str.maketrans('', '', s.punctuation)
+    # translator = str.maketrans('', '', s.punctuation)
 
     for p in soup.body.find_all('p'):
         for string in p.next_elements:
@@ -37,37 +44,35 @@ def scrap_text(soup):
             if re.match(r'\s', string):  # deletes 'standalone' whitespaces and other blank characters
                 continue
             else:
-                string = string.translate(translator)
-                # TODO: navrhnout regex pro odstraneni VSECH nevhodnych znaku - HOTOVO
-                # string = re.sub(r'[,.|\s+]', ' ', string).strip()  # odstrani prebytecne mezery a jine znaky z retezce
+                # string = string.translate(translator)
                 yield string
 
 
-def discard_interpunction(text, chars_to_discard=('!', ':', '\'', '\"', '*', '.', ',', '|', '?', '/', '\\', '<', '>',
-                                                  ' ')):
-    """
-    Hotfix - odstraní nebezpečné znaky u titlu - aby šel uložit soubor
-    """
-    for char in chars_to_discard:
-        text = text.replace(char, '')
-    return text
-
-
-def group_text(scrap):
-    string = ' '.join(scrap)
-    string = re.sub(r'\s+', ' ', string)
-    return string
-
-
 def make_title(soup) -> str:
-    # hotfix - v případě nenalezení head nebo head.text
+    """
+    :param soup: HTML předzpracované balíčkem beautifulsoup - soup object
+    :return: title stránky
+    """
+    # v případě nenalezení head nebo head.text
     if not soup.head or not soup.head.title:
         return ''
     return soup.head.title.text
 
 
 def process_text(soup):
-    scrap = scrap_text(soup)
+    """Vrátí veškerý obsažený text na stránce
+
+    :param soup:
+    :return:
+    """
+    def group_text(scra):
+        """Joins text from list to one string"""
+        string = ' '.join(scra)
+        string = re.sub(r'\s+', ' ', string)
+        return string
+
+    # List stringů z <p> tagů
+    scrap = list(scrap_text(soup))
     text = group_text(scrap)
     return text
 
@@ -75,19 +80,21 @@ def process_text(soup):
 def process_urls(soup, current_url):
     urls = get_urls(soup, current_url)
     urls = filter(lambda x: not re.match(r'^(.*?)\.pdf', x), urls)  # filter pdf files
+    urls = filter(lambda x: 'facebook' not in x, urls)
+    urls = filter(lambda x: 'youtube' not in x, urls)
     urls = set(urls)
     return urls
 
 
 def process_html(html: str, current_url):
-    """
-    Processes HTML code. Separates urls, title and actual content. Serves as a "one call for all" function.
+    """Processes HTML code.
+
+    Separates urls, title and actual content. Serves as a "one call for all" function.
 
     :param html: html to process
     :param current_url:
     :return: urls, title, text
     """
-    # BeautifulSoup zabírá určitý nezanedbatelný čas - zvážit
     soup = BeautifulSoup(html, 'html.parser')
     urls = process_urls(soup, current_url)
     title = make_title(soup)

@@ -5,7 +5,8 @@ setup(name='ite',
       packages=['ite'],
       entry_points={
           'console_scripts': [
-              'ite = ite.__main__:main'
+              'ite = ite.__main__:main',
+              'server = ite.server:main'
           ]
       },
       )
