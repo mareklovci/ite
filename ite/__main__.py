@@ -49,6 +49,9 @@ def save(title: str, content: str, url: str):
     title = make_safe_filename(title)
     json_file = {'title': title, 'url': url, 'content': content}
     path = '../storage/'
+    # Při spuštění PyCharm vs konzole nesedí cesty, toto je fix
+    if not os.path.exists(path):
+        path = './storage/'
     path = os.path.join(path + str(prefix) + ' - ' + title + '.json')
 
     with io.open(path, 'w', encoding='utf8') as jsf:
