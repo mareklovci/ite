@@ -34,7 +34,7 @@ def make_safe_filename(text, chars_to_discard=('\r', '\t', '\n', '!', ':', '\'',
     """Odstraní nebezpečné znaky u titlu - aby šel uložit soubor"""
     for char in chars_to_discard:
         text = text.replace(char, '')
-    return text
+    return text[:30]
 
 
 def save(title: str, content: str, url: str):
