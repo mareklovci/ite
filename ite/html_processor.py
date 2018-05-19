@@ -2,15 +2,14 @@
 # -*- coding: utf-8 -*-
 """HTML reading and processing"""
 
-import string as s
 import re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 
 def get_urls(soup, current_url) -> str:
-    """
-    Vrátí odkazy nacházející se na stránce
+    """Vrátí odkazy nacházející se na stránce
+
     :param soup: HTML předzpracované balíčkem beautifulsoup - soup object
     :param current_url: současné url pro relativní odkazy
     :return: url získané ze soup
@@ -34,18 +33,14 @@ def scrap_text(soup):
     if not soup.body:
         return ''
 
-    # translator = str.maketrans('', '', s.punctuation)
-
-    for p in soup.body.find_all('p'):
-        for string in p.next_elements:
-            string = str(string)
-            if re.match(r'<[^>]*>', string):
-                continue
-            if re.match(r'\s', string):  # deletes 'standalone' whitespaces and other blank characters
-                continue
-            else:
-                # string = string.translate(translator)
-                yield string
+    for string in soup.body.find('p').next_elements:
+        string = str(string)
+        if re.match(r'<[^>]*>', string):
+            continue
+        if re.match(r'\s', string):  # deletes 'standalone' whitespaces and other blank characters
+            continue
+        else:
+            yield string
 
 
 def make_title(soup) -> str:
