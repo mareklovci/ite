@@ -16,8 +16,6 @@ Seznam nadstandartních balíčků nad balíčky 'Anaconda Distribution' nutnýc
 
 Přes příkazovou řádku se program spouští příkazem `> python -m ite` v adresáři programu. Pro více info viz [docs.python.org][2]. V případě použití PyCharm IDE spustit soubor `__main__.py`. Pro změnu startovní stránky změňte proměnnou 'start_url' v souboru `__main__.py` v metodě 'main()' a pro změnu hloubky prohledávání změňte proměnnou 'max_depth' ve stejném souboru a metodě.
 
-![Run program with CLI](/docs/img/cli-run.png)
-
 ## Spuštění serveru
 
 Funkčnost aplikace je podmíněna staženými daty (pomocí webscrapping robota). Přes příkazovou řádku se server spouští příkazem `> python -m ite.server` v adresáři programu. V případě použití PyCharm IDE spustit soubor `server.py`.
@@ -26,5 +24,5 @@ Funkčnost aplikace je podmíněna staženými daty (pomocí webscrapping robota
 
 Webová aplikace je přístupná pod url `localhost:8885`.
 
-[1]: /docs/index.md
+[1]: https://github.com/mareklovci/ite/wiki
 [2]: https://docs.python.org/3.6/using/cmdline.html
