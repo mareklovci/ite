@@ -3,9 +3,9 @@
 """Webpage downloading, reading and processing"""
 
 from urllib import request as req
-import time
 
-# Zabírá určitý nezanedbatelný čas, promyslet paralelizaci
+
+# NOTE(tomashonzik): takes some time, we should consider parallelization
 def read_website(url: str) -> str:
     try:
         fr = req.urlopen(url)

@@ -37,9 +37,24 @@ def make_safe_filename(text, chars_to_discard=('\r', '\t', '\n', '!', ':', '\'',
     return text[:30]
 
 
-def save(title: str, content: str, url: str):
+def _get_path(folder: str = 'storage') -> str:
+    """Returns path to chosen folder.
+
+    Used for getting path to storage folder -> '../storage/'
+
+    :param folder: path you want to use
+    :return: path to folder
     """
-    Na základě názvu, obsahu a url vygeneruje soubor s daty a uloží na disk do složky '../storage'
+    # there is a difference between PyCharm and shell in path tracing, this ensures compatibility
+    path = '../' + folder + '/'
+    if not os.path.exists(path):
+        path = './' + folder + '/'
+    return path
+
+
+def save(title: str, content: str, url: str):
+    """Na základě názvu, obsahu a url vygeneruje soubor s daty a uloží na disk do složky '../storage'
+
     :param title: název stránky
     :param content: obsah stránky
     :param url: url stránky
@@ -48,10 +63,7 @@ def save(title: str, content: str, url: str):
     prefix += 1
     title = make_safe_filename(title)
     json_file = {'title': title, 'url': url, 'content': content}
-    path = '../storage/'
-    # Při spuštění PyCharm vs konzole nesedí cesty, toto je fix
-    if not os.path.exists(path):
-        path = './storage/'
+    path = _get_path()  # gets path to 'storage' folder
     path = os.path.join(path + str(prefix) + ' - ' + title + '.json')
 
     with io.open(path, 'w', encoding='utf8') as jsf:
@@ -64,7 +76,7 @@ def save(title: str, content: str, url: str):
 
 
 def skip_page():
-    """Přeskočí nezpracovatelnout stránku"""
+    """Skips page which is not possible to process"""
     global depth, urls_per_level, counted_urls, urls_to_process, saved_urls
     urls_per_level -= 1
     if urls_per_level < 1:

@@ -33,6 +33,9 @@ def scrap_text(soup):
     if not soup.body:
         return ''
 
+    if not soup.body.find('p'):
+        return ''
+
     for string in soup.body.find('p').next_elements:
         string = str(string)
         if re.match(r'<[^>]*>', string):
