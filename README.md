@@ -12,6 +12,10 @@ Program se skládá ze 2 částí, první částí je webscaping, který prohled
 
 Seznam nadstandartních balíčků nad balíčky 'Anaconda Distribution' nutných k chodu programu je uveden v souboru 'requirements.txt'.
 
+```sh
+pip install -r requirements.txt
+```
+
 ## Spuštění webscrapping robota
 
 Přes příkazovou řádku se program spouští příkazem `> python -m ite` v adresáři programu. Pro více info viz [docs.python.org][2]. V případě použití PyCharm IDE spustit soubor `__main__.py`. Pro změnu startovní stránky změňte proměnnou 'start_url' v souboru `__main__.py` v metodě 'main()' a pro změnu hloubky prohledávání změňte proměnnou 'max_depth' ve stejném souboru a metodě.
